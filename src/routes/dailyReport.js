@@ -20,13 +20,13 @@ router.get("/reports", (req, res) => {
 });
 
 router.get("/reports/summary/weekly", (req, res) => {
-  res.status(200).json("Relatorio semanal gerado com sucesso");
-});
-
-router.get("/reports/summary/weekly", (req, res) => {
   const { format } = req.query;
 
-  res.status(200).json(`Relatorio gerado no formato ${format}`);
+  if (format) {
+    return res.status(200).json(`Relatorio gerado no formato ${format}`);
+  }
+
+  res.status(200).json("Relatorio semanal gerado com sucesso");
 });
 
 export default router;
