@@ -1,12 +1,13 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 import User from "../models/User.js";
 
 const router = Router();
-const JWTSECRET =
-  "e02bec5bcdba3ca747227627852375ca068d2e3722043471bef14d4afe4e1ca9";
+dotenv.config();
+const JWTSECRET = process.env.JWTSECRET;
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
