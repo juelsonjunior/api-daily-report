@@ -1,18 +1,32 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
 
 const router = Router();
+const JWTSECRET = "e02bec5bcdba3ca747227627852375ca068d2e3722043471bef14d4afe4e1ca9";
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  res
-    .status(200)
-    .json(
-      `Login feito com o nome ${name} o email ${email} e a senha ${password}`
-    );
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json(`Usuário não encontrado`);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json(`Senha incorrecta. Tente novamente!`);
+    }
+
+    const token = jwt.sign({ id: user._id }, JWTSECRET, { expiresIn: "1m" });
+
+    res.status(200).json(token);
+  } catch (error) {
+    res.status(500).json({ message: "Falha no servidor", error });
+  }
 });
 
 router.post("/register", async (req, res) => {
