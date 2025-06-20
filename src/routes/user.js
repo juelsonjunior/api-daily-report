@@ -30,7 +30,6 @@ router.post("/register", async (req, res) => {
     }
 
     const hasPassword = await bcrypt.hash(password, 8);
-    console.log(`Senha hash ${hasPassword}`);
 
     const newUser = await User.create({
       name: name,
@@ -45,8 +44,7 @@ router.post("/register", async (req, res) => {
     }
     res.status(201).json(`Usuario cadastrado com sucesso`);
   } catch (error) {
-    res.status(500).json(`Erro: Falha no servidor`, error);
-    console.log("O erro", error);
+    res.status(500).json(`Falha no servidor`, error);
   }
 });
 
