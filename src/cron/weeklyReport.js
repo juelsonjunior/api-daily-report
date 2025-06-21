@@ -1,13 +1,14 @@
 import cron from "node-cron";
 import path from "path";
 
-import generateReportJSON from "../helpers/generateReportJSON.js";
 import getCurrentWeek from "../helpers/getCurrentWeek.js";
 
 import Report from "../models/Report.js";
 import User from "../models/User.js";
+import { sendReportEmail } from "../mail/sendReport.js";
+import generateReportPDF from "../helpers/generateReportPDF.js";
 
-cron.schedule("58 15 * * *", async () => {
+cron.schedule("11 17 * * *", async () => {
   try {
     const { monday, sunday } = getCurrentWeek();
 
@@ -32,10 +33,17 @@ cron.schedule("58 15 * * *", async () => {
       const filePath = path.join(
         process.cwd(),
         "src/reportsWeek",
-        `week${mondayDataClean}-${user.name.replace(/\s+/g, "_")}.json`
+        `week${mondayDataClean}-${user.name.replace(/\s+/g, "_")}.pdf`
       );
 
-      await generateReportJSON(reportSummaryWeekly, filePath);
+      await generateReportPDF(reportSummaryWeekly, filePath);
+
+      await sendReportEmail(
+        user.email,
+        "Seu relatório semanal",
+        "Segue em anexo",
+        filePath
+      );
     }
   } catch (error) {
     console.log("Houve um erro ao agendar o cron", error);
