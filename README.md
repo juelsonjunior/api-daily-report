@@ -38,7 +38,7 @@ Uma API RESTful para registro e acompanhamento de atividades diárias, com gera�
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <https://github.com/juelsonjunior/daily-report.git>
+    git clone <https://github.com/juelsonjunior/api-daily-report.git>
     cd daily-report
     ```
 
