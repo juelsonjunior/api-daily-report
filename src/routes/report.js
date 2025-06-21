@@ -106,13 +106,14 @@ router.get("/reports/summary/weekly", async (req, res) => {
   };
 
   if (format == "json") {
+    const filePath = path.join(
+      process.cwd(),
+      "src/reportsWeek",
+      `week${mondayDataClean}-${req.user.name.replace(/\s+/g, "_")}.json`
+    );
     try {
-      const filePath = path.join(
-        process.cwd(),
-        "src/reportsWeek",
-        `week${mondayDataClean}.json`
-      );
       await generateReportJSON(reportSummaryWeekly, filePath);
+
       return res
         .status(201)
         .json({ message: "Relatório JSON gerado com sucesso" });
@@ -127,7 +128,7 @@ router.get("/reports/summary/weekly", async (req, res) => {
       const filePath = path.join(
         process.cwd(),
         "src/reportsWeek",
-        `week${mondayDataClean}.pdf`
+        `week${mondayDataClean}-${req.user.name.replace(/\s+/g, "_")}.pdf`
       );
       await generateReportPDF(reportSummaryWeekly, filePath);
       return res
