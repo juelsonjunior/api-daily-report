@@ -1,0 +1,13 @@
+{
+  "user": "Juelson Júnior",
+  "week": "2025-06-16 - 2025-06-22",
+  "daysReported": 1,
+  "summary": [
+    {
+      "whatWasDone": "Implementei a autenticação com JWT.",
+      "whatToDoTomorrow": "Finalizar a integração com o sistema de email.",
+      "blockers": "Dificuldade com a lib de PDF, vou estudar alternativas.",
+      "createAt": "2025-06-21T03:08:02.397Z"
+    }
+  ]
+}
