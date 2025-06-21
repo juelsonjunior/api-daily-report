@@ -4,7 +4,7 @@ dotenv.config();
 
 export async function sendReportEmail(to, subject, text, filePath) {
   await transporter.sendMail({
-    from: `Reatório Semanal ${process.env.EMAIL_GMAIL}`,
+    from: `Reatório Semanal ${process.env.MAIL_USER}`,
     to,
     subject,
     text,
