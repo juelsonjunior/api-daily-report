@@ -8,7 +8,7 @@ import User from "../models/User.js";
 import { sendReportEmail } from "../mail/sendReport.js";
 import generateReportPDF from "../helpers/generateReportPDF.js";
 
-cron.schedule("11 17 * * *", async () => {
+cron.schedule("0 23 * * 0", async () => {
   try {
     const { monday, sunday } = getCurrentWeek();
 
