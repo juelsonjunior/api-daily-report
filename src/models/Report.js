@@ -11,7 +11,7 @@ const reportSchema = new mongoose.Schema({
   },
   blockers: {
     type: String,
-    required: true,
+    required: false,
   },
   createAt: {
     type: Date,

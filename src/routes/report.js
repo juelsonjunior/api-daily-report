@@ -6,7 +6,7 @@ const router = Router();
 router.post("/reports", async (req, res) => {
   const { whatWasDone, whatToDoTomorrow, blockers } = req.body;
 
-  if (!whatWasDone || !whatToDoTomorrow || !blockers) {
+  if (!whatWasDone || !whatToDoTomorrow) {
     return res
       .status(400)
       .json({ message: "Precisa preencher todos os campos" });
