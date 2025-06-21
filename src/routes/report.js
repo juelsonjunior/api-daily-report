@@ -1,7 +1,11 @@
 import { Router } from "express";
+import path from "path";
+
 import Report from "../models/Report.js";
 import getQueryDateRange from "../helpers/getQueryDateRange.js";
 import getCurrentWeek from "../helpers/getCurrentWeek.js";
+import generateReportJSON from "../helpers/generateReportJSON.js";
+
 const router = Router();
 
 router.post("/reports", async (req, res) => {
@@ -83,10 +87,6 @@ router.get("/reports", async (req, res) => {
 router.get("/reports/summary/weekly", async (req, res) => {
   const { format } = req.query;
 
-  if (format) {
-    return res.status(200).json(`Relatorio gerado no formato ${format}`);
-  }
-
   const { monday, sunday } = getCurrentWeek();
 
   const mondayDataClean = monday.toISOString().split("T")[0];
@@ -103,6 +103,27 @@ router.get("/reports/summary/weekly", async (req, res) => {
     daysReported: reportWeek.length,
     summary: reportWeek,
   };
+
+  if (format == "json") {
+    try {
+      const filePath = path.join(
+        process.cwd(),
+        "src/reportsWeek",
+        `week${mondayDataClean}.json`
+      );
+      await generateReportJSON(reportSummaryWeekly, filePath);
+      return res
+        .status(201)
+        .json({ message: "Rlatório JSON gerado com sucesso" });
+    } catch (error) {
+      res.status(500).json({ message: "Falha ao gerar relatório JSON" });
+      console.log(error);
+    }
+  }
+
+  if (format == "pdf") {
+    return res.status(200).json({ message: "Relatório gerado no formato PDF" });
+  }
 
   res.status(200).json(reportSummaryWeekly);
 });
