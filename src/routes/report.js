@@ -1,5 +1,6 @@
 import { Router } from "express";
 import Report from "../models/Report.js";
+import getQueryDateRange from "../helper/getQueryDateRange.js";
 const router = Router();
 
 router.post("/reports", async (req, res) => {
@@ -38,10 +39,20 @@ router.post("/reports", async (req, res) => {
   res.status(201).json({ message: "Relatório cadastrado com sucesso" });
 });
 
-router.get("/reports", (req, res) => {
+router.get("/reports", async (req, res) => {
   const { from, to } = req.query;
 
-  res.status(200).json(`Relatorio de ${from} a ${to}`);
+  const { startdata, endData } = getQueryDateRange(from, to);
+
+  const filterData = await Report.find({
+    createAt: { $gte: startdata, $lt: endData },
+  });
+
+  if (!filterData) {
+    return res.json("Nenhum relatório foi feito nesse intervalo");
+  }
+
+  res.status(200).json(filterData);
 });
 
 router.get("/reports/summary/weekly", (req, res) => {
