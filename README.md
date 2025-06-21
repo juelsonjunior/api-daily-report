@@ -58,4 +58,4 @@ Uma API RESTful para registro e acompanhamento de atividades diárias, com gera�
 
 ## 📚 Documentação
 
-[Link para a documentação da API (Postman, Swagger, etc.)] 
+[Link para a documentação fazendo kkkkk] 
