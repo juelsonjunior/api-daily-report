@@ -20,13 +20,13 @@ export default function generateReportPDF(data, filePath) {
       doc.text(` Dias reportados: ${data.daysReported}`).moveDown();
 
       // Relatórios por dia
-      data.summary.forEach((dia, i) => {
+      data.summary.forEach((dia) => {
+        const date = new Date(dia.createAt).toISOString().split("T")[0];
+        const day = date.split("-")[2];
         doc
           .fontSize(13)
           .text(
-            ` Dia ${i + 1} — ${
-              new Date(dia.createAt).toISOString().split("T")[0]
-            }`,
+            ` Dia ${day} - ${date}`,
             { underline: true }
           )
           .moveDown(0.5);
