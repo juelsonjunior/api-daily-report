@@ -19,8 +19,6 @@ const privateRoute = (req, res, next) => {
 
     req.user = decoded;
 
-    console.log("Usuario", req.user);
-
     next();
   } catch (error) {
     res.status(500).json({ message: `Falha no middlware de autenticação` });
