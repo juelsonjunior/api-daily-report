@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema({
+  idAuthor: {
+    type: String,
+    required: true,
+  },
   whatWasDone: {
     type: String,
     required: true,
