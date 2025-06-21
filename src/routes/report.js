@@ -42,6 +42,14 @@ router.post("/reports", async (req, res) => {
 router.get("/reports", async (req, res) => {
   const { from, to } = req.query;
 
+  if (!from || !to) {
+    return res.status(400).json({ message: "Precisa informar o intervalo de busca" });
+  }
+
+  if(from > to){
+    return res.status(400).json({ message: "A data inicial não pode ser maior que a final" });
+  }
+
   const { startdata, endData } = getQueryDateRange(from, to);
 
   const filterData = await Report.find({
