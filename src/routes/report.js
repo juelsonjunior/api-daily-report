@@ -5,6 +5,7 @@ import Report from "../models/Report.js";
 import getQueryDateRange from "../helpers/getQueryDateRange.js";
 import getCurrentWeek from "../helpers/getCurrentWeek.js";
 import generateReportJSON from "../helpers/generateReportJSON.js";
+import generateReportPDF from "../helpers/generateReportPDF.js";
 
 const router = Router();
 
@@ -114,7 +115,7 @@ router.get("/reports/summary/weekly", async (req, res) => {
       await generateReportJSON(reportSummaryWeekly, filePath);
       return res
         .status(201)
-        .json({ message: "Rlatório JSON gerado com sucesso" });
+        .json({ message: "Relatório JSON gerado com sucesso" });
     } catch (error) {
       res.status(500).json({ message: "Falha ao gerar relatório JSON" });
       console.log(error);
@@ -122,7 +123,20 @@ router.get("/reports/summary/weekly", async (req, res) => {
   }
 
   if (format == "pdf") {
-    return res.status(200).json({ message: "Relatório gerado no formato PDF" });
+    try {
+      const filePath = path.join(
+        process.cwd(),
+        "src/reportsWeek",
+        `week${mondayDataClean}.pdf`
+      );
+      await generateReportPDF(reportSummaryWeekly, filePath);
+      return res
+        .status(200)
+        .json({ message: "Relatório PDF gerado com sucesso" });
+    } catch (error) {
+      res.status(500).json({ message: "Falha ao gerar relatório PDF" });
+      console.log(error);
+    }
   }
 
   res.status(200).json(reportSummaryWeekly);
