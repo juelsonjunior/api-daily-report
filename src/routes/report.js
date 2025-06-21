@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Report from "../models/Report.js";
-import getQueryDateRange from "../helper/getQueryDateRange.js";
+import getQueryDateRange from "../helpers/getQueryDateRange.js";
+import getCurrentWeek from "../helpers/getCurrentWeek.js";
 const router = Router();
 
 router.post("/reports", async (req, res) => {
@@ -43,11 +44,15 @@ router.get("/reports", async (req, res) => {
   const { from, to } = req.query;
 
   if (!from || !to) {
-    return res.status(400).json({ message: "Precisa informar o intervalo de busca" });
+    return res
+      .status(400)
+      .json({ message: "Precisa informar o intervalo de busca" });
   }
 
-  if(from > to){
-    return res.status(400).json({ message: "A data inicial não pode ser maior que a final" });
+  if (from > to) {
+    return res
+      .status(400)
+      .json({ message: "A data inicial não pode ser maior que a final" });
   }
 
   const { startdata, endData } = getQueryDateRange(from, to);
@@ -63,14 +68,30 @@ router.get("/reports", async (req, res) => {
   res.status(200).json(filterData);
 });
 
-router.get("/reports/summary/weekly", (req, res) => {
+router.get("/reports/summary/weekly", async (req, res) => {
   const { format } = req.query;
 
   if (format) {
     return res.status(200).json(`Relatorio gerado no formato ${format}`);
   }
 
-  res.status(200).json("Relatorio semanal gerado com sucesso");
+  const { monday, sunday } = getCurrentWeek();
+
+  const mondayDataClean = monday.toISOString().split("T")[0];
+  const sundayDataClean = sunday.toISOString().split("T")[0];
+
+  const reportWeek = await Report.find({
+    createAt: { $gte: monday, $lt: sunday },
+  }).select("-_id -__v");
+
+  const reportSummaryWeekly = {
+    user: req.user.name,
+    week: `${mondayDataClean} - ${sundayDataClean}`,
+    daysReported: reportWeek.length,
+    summary: reportWeek,
+  };
+
+  res.status(200).json(reportSummaryWeekly);
 });
 
 export default router;
