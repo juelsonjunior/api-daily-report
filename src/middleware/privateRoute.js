@@ -15,7 +15,11 @@ const privateRoute = (req, res, next) => {
     }
 
     const tokenClean = token.split(" ")[1];
-    const verifyToken = jwt.verify(tokenClean, JWTSECRET);
+    const decoded = jwt.verify(tokenClean, JWTSECRET);
+
+    req.user = decoded;
+
+    console.log("Usuario", req.user);
 
     next();
   } catch (error) {

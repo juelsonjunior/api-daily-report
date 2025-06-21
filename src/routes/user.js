@@ -25,7 +25,9 @@ router.post("/login", async (req, res) => {
         .json({ message: "Senha incorrecta. Tente novamente!" });
     }
 
-    const token = jwt.sign({ id: user._id }, JWTSECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ id: user._id, name: user.name }, JWTSECRET, {
+      expiresIn: "1d",
+    });
 
     res.status(200).json(token);
   } catch (error) {
