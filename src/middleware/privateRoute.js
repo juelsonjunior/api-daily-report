@@ -17,14 +17,9 @@ const privateRoute = (req, res, next) => {
     const tokenClean = token.split(" ")[1];
     const verifyToken = jwt.verify(tokenClean, JWTSECRET);
 
-    if (!verifyToken) {
-      return res.status(400).json({
-        message: "Você não tem acesso a essa area.Por favor faça login!",
-      });
-    }
     next();
   } catch (error) {
-    res.status(500).json({ message: `Falha no middlware` });
+    res.status(500).json({ message: `Falha no middlware de autenticação` });
     console.log(error);
   }
 };
